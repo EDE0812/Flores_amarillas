@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { Mail, MailOpen, Heart, Sparkles, Sun } from 'lucide-react';
+import { Mail, MailOpen, Heart, Sun } from 'lucide-react';
 
 export default function LoveLetter() {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,8 +9,8 @@ export default function LoveLetter() {
   const handleOpen = () => {
     if (!isOpen) {
       confetti({
-        particleCount: 100,
-        spread: 80,
+        particleCount: 110,
+        spread: 85,
         origin: { y: 0.7 },
         colors: ['#facc15', '#fbbf24', '#f59e0b', '#ffffff', '#eab308']
       });
@@ -29,15 +29,15 @@ export default function LoveLetter() {
       >
         <div className="inline-flex items-center gap-2 text-amber-700 font-semibold text-sm bg-yellow-100 px-4 py-1.5 rounded-full border border-yellow-300">
           <Sun className="w-4 h-4 text-amber-600" />
-          <span>Una Carta Especial Para Ti</span>
+          <span>Una cartita especial para ti</span>
         </div>
 
         <h2 className="font-cursive text-4xl sm:text-6xl text-amber-950 font-bold">
-          ¿Por qué regalarte Flores Amarillas hoy? 💛
+          Para el amor de mi vida 🌻
         </h2>
 
         <p className="text-stone-600 font-sans-clean max-w-xl mx-auto text-base sm:text-lg">
-          Toca el sobre para abrir la carta especial que he preparado con todo mi cariño.
+          Toca el sobrecito para abrir la carta que te escribí con todo mi corazón.
         </p>
 
         {/* Envelope Container */}
@@ -52,11 +52,11 @@ export default function LoveLetter() {
             <div className="flex justify-between items-center border-b border-amber-200/80 pb-4 mb-6">
               <div className="flex items-center gap-2 text-amber-900 font-serif-romantic font-semibold">
                 {isOpen ? <MailOpen className="w-6 h-6 text-amber-600" /> : <Mail className="w-6 h-6 text-amber-600" />}
-                <span>Carta del 21 de Septiembre</span>
+                <span>21 de Septiembre</span>
               </div>
               <span className="bg-amber-200/80 text-amber-950 text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
                 <Heart className="w-3.5 h-3.5 text-amber-700 fill-amber-700" />
-                Con Amor
+                Solo para ti
               </span>
             </div>
 
@@ -78,30 +78,30 @@ export default function LoveLetter() {
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 transition={{ duration: 0.6 }}
-                className="text-left space-y-4 font-sans-clean text-stone-700 text-base leading-relaxed bg-white/80 p-6 sm:p-8 rounded-2xl border border-amber-200 shadow-inner"
+                className="text-left space-y-4 font-sans-clean text-stone-700 text-base leading-relaxed bg-white/90 p-6 sm:p-8 rounded-2xl border border-amber-200 shadow-inner"
               >
                 <p className="font-cursive text-3xl text-amber-900 font-bold border-b border-amber-100 pb-2">
-                  Mi amor hermoso,
+                  Mi reina hermosa,
                 </p>
 
                 <p>
-                  Regalar flores amarillas cada 21 de septiembre se ha convertido en una hermosa tradición para celebrar el inicio de la primavera, la luz y la alegría. Pero para mí, tú eres la razón por la que mi mundo florece todos los días. 🌼
+                  Hoy es 21 de septiembre y en todos lados regalan flores amarillas, pero yo no quería darte solo una flor que con los días se apaga. Quería regalarte algo hecho por mí, un rinconcito nuestro que quede guardado para siempre, donde cada pétalo y cada detalle te recuerden lo mucho que te amo. 🌼
                 </p>
 
                 <p>
-                  Estas flores amarillas simbolizan mi deseo de verte siempre feliz, llena de sonrisas y con la certeza de que siempre estaré a tu lado para cuidarte, apoyarte y hacerte sonreír.
+                  Gracias por estar a mi lado, por tus abrazos que me curan cualquier día pesado, por tu risa hermosa que ilumina todo y por hacer que cada momento juntos sea el mejor de mi vida.
                 </p>
 
                 <p>
-                  Gracias por ser mi persona favorita, por llenar mi vida de colores cálidos y por hacer que cada momento juntos sea inolvidable.
+                  Estas flores amarillas son para decirte que mi felicidad eres tú, hoy y todos los días del año.
                 </p>
 
                 <div className="pt-4 border-t border-amber-100 flex flex-col items-end">
-                  <p className="font-cursive text-2xl font-bold text-amber-900">
-                    Con todo mi amor siempre,
+                  <p className="font-cursive text-3xl font-bold text-amber-900">
+                    Te amo con todo mi corazón,
                   </p>
-                  <p className="font-serif-romantic text-sm text-amber-700 italic">
-                    Tu pareja que te ama infinitamente 💛
+                  <p className="font-cursive text-xl text-amber-700 font-bold mt-1">
+                    Tu esposito Edehilton 💛
                   </p>
                 </div>
               </motion.div>

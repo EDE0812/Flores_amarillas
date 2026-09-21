@@ -5,14 +5,14 @@ import { motion } from 'framer-motion';
 export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(0.35); // Moderate 35% volume
+  const [volume, setVolume] = useState(0.35); // 35% moderado
   const [isHovered, setIsHovered] = useState(false);
   const audioRef = useRef(null);
+  const collapseTimerRef = useRef(null);
 
-  // Path in public/music/cancion.mp3
   const musicSrc = '/music/cancion.mp3';
 
-  // Autoplay at 35% moderate volume on page load / first interaction
+  // Autoplay at 35% volume on first tap/touch/scroll/click on smartphone or PC
   useEffect(() => {
     if (!audioRef.current) return;
     audioRef.current.volume = volume;
@@ -21,37 +21,53 @@ export default function MusicPlayer() {
       if (audioRef.current && audioRef.current.paused) {
         audioRef.current
           .play()
-          .then(() => {
-            setIsPlaying(true);
-          })
-          .catch(() => {
-            // Browser blocked un-prompted autoplay; will play on first click
-          });
+          .then(() => setIsPlaying(true))
+          .catch(() => {});
       }
     };
 
+    // Attempt direct play on load
     startAudio();
 
-    // Browser fallback: start audio on first click/tap anywhere on the screen
-    const handleFirstTouch = () => {
+    // Smartphone touch & click trigger
+    const handleFirstInteraction = () => {
       if (audioRef.current && audioRef.current.paused) {
         audioRef.current
           .play()
           .then(() => setIsPlaying(true))
           .catch(() => {});
       }
-      window.removeEventListener('click', handleFirstTouch);
-      window.removeEventListener('touchstart', handleFirstTouch);
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
     };
 
-    window.addEventListener('click', handleFirstTouch);
-    window.addEventListener('touchstart', handleFirstTouch);
+    window.addEventListener('click', handleFirstInteraction);
+    window.addEventListener('touchstart', handleFirstInteraction, { passive: true });
+    window.addEventListener('pointerdown', handleFirstInteraction, { passive: true });
+    window.addEventListener('scroll', handleFirstInteraction, { passive: true });
 
     return () => {
-      window.removeEventListener('click', handleFirstTouch);
-      window.removeEventListener('touchstart', handleFirstTouch);
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('pointerdown', handleFirstInteraction);
+      window.removeEventListener('scroll', handleFirstInteraction);
     };
   }, []);
+
+  // Auto-collapse expanded bubble after 3 seconds of inactivity
+  useEffect(() => {
+    if (isHovered) {
+      if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
+      collapseTimerRef.current = setTimeout(() => {
+        setIsHovered(false);
+      }, 3000);
+    }
+    return () => {
+      if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
+    };
+  }, [isHovered]);
 
   const togglePlay = (e) => {
     e?.stopPropagation();
@@ -63,12 +79,8 @@ export default function MusicPlayer() {
     } else {
       audioRef.current
         .play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch((err) => {
-          console.warn('Autoplay error:', err);
-        });
+        .then(() => setIsPlaying(true))
+        .catch((err) => console.warn('Play error:', err));
     }
   };
 
@@ -107,10 +119,10 @@ export default function MusicPlayer() {
         transition={{ delay: 0.5, duration: 0.5 }}
         className="fixed top-4 right-4 z-[80]"
         onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onClick={() => setIsHovered(true)}
       >
         <div className="bg-white/95 backdrop-blur-md rounded-full shadow-xl border border-amber-300/80 p-1.5 transition-all duration-300 flex items-center">
-          {/* Collapsed State: Compact Button */}
+          {/* Collapsed State: Compact Circular Pill */}
           {!isHovered && (
             <motion.button
               key="compact"
@@ -134,7 +146,7 @@ export default function MusicPlayer() {
             </motion.button>
           )}
 
-          {/* Expanded State: Full Controls + Volume Slider on Hover */}
+          {/* Expanded State: Full Controls + Volume Slider (Auto-collapses after 3s) */}
           {isHovered && (
             <motion.div
               key="expanded"
@@ -162,11 +174,11 @@ export default function MusicPlayer() {
                   {isPlaying ? 'Nuestra Canción 🎵' : 'Música de Fondo'}
                 </span>
                 <span className="text-[10px] text-amber-700 font-medium">
-                  {isPlaying ? `Volumen: ${Math.round(volume * 100)}%` : 'Click para escuchar'}
+                  {isPlaying ? `Volumen: ${Math.round(volume * 100)}%` : 'Toca para escuchar'}
                 </span>
               </div>
 
-              {/* Play / Pause button */}
+              {/* Play / Pause */}
               <button
                 onClick={togglePlay}
                 aria-label={isPlaying ? 'Pausar música' : 'Reproducir música'}
@@ -175,7 +187,7 @@ export default function MusicPlayer() {
                 {isPlaying ? <Pause size={15} /> : <Play size={15} className="ml-0.5" />}
               </button>
 
-              {/* Mute button */}
+              {/* Mute */}
               <button
                 onClick={toggleMute}
                 aria-label={isMuted ? 'Activar sonido' : 'Silenciar'}
